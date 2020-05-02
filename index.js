@@ -4,6 +4,14 @@ export class DocServerAPI {
     constructor(url) {
         this.url = url
         this.listeners = {}
+        this.authCallback = (msg) => {
+            console.log("got the auth callback", msg.data)
+            localStorage.setItem('access-token', msg.data.payload.accessToken)
+            localStorage.setItem('username', msg.data.payload.username)
+            this.win.close()
+            window.removeEventListener('message', this.authCallback)
+            this.fire(LOGIN, {})
+        }
     }
     on(type, cb) {
         if (!this.listeners[type]) this.listeners[type] = []
@@ -31,14 +39,6 @@ export class DocServerAPI {
     }
     startLogout() {
         localStorage.clear()
-        this.fire(LOGIN, {})
-    }
-    authCallback = (msg) => {
-        console.log("got the auth callback", msg.data)
-        localStorage.setItem('access-token', msg.data.payload.accessToken)
-        localStorage.setItem('username', msg.data.payload.username)
-        this.win.close()
-        window.removeEventListener('message', this.authCallback)
         this.fire(LOGIN, {})
     }
     getAccessToken() {
