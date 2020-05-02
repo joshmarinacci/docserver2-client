@@ -62,9 +62,8 @@ export class DocServerAPI {
             mimetype:'application/json',
             title:doc.title?doc.title:'untitled',
         }
-        if(type) {
-            params.type = type
-        }
+        if(type) params.type = type
+        if(doc.id) params.id = doc.id
         let query = '?'+ Object.keys(params).map(key => key+'='+params[key]).join("&")
 
         return this._fetch(`${this.url}/docs/${this.getUsername()}/upload/${query}`,{
@@ -88,6 +87,7 @@ export class DocServerAPI {
             })
     }
     load(id) {
+        console.log("loading doc id",id)
         let url = `${this.url}/docs/${this.getUsername()}/data/${id}/latest/application/json/data.json`
         return fetch(url,{
             method:'GET',
@@ -99,7 +99,7 @@ export class DocServerAPI {
                 if (res.status === 404) throw new Error(res.statusText + " " + res.url)
                 return res
             }).then(res => res.json()).then(res => {
-                console.log("the load result is",res)
+                res.id = id
                 return res
             })
     }
