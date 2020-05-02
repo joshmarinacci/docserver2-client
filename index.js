@@ -54,13 +54,16 @@ export class DocServerAPI {
             return res
         })
     }
-    save(doc) {
+    save(doc, type) {
         let doc_text = JSON.stringify(doc, null, 4);
         console.log("saving now",doc_text)
         let params = {
             type:'meowsynth',
             mimetype:'application/json',
             title:doc.title?doc.title:'untitled',
+        }
+        if(type) {
+            params.type = type
         }
         let query = '?'+ Object.keys(params).map(key => key+'='+params[key]).join("&")
 
