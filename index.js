@@ -103,12 +103,13 @@ export class DocServerAPI {
                 return res
             })
     }
-    delete(id) {
+    delete(id,type) {
         let params = {
             type:'meowsynth',
             mimetype:'application/json',
             _id:id,
         }
+        if(type) params.type = type
         let query = '?'+ Object.keys(params).map(key => key+'='+params[key]).join("&")
         let url = `${this.url}/docs/${this.getUsername()}/delete/${query}`
         return this._fetch(url, {
@@ -116,6 +117,7 @@ export class DocServerAPI {
         }).then(res => res.json())
             .then(res => {
                 console.log("final result",res)
+                return res
             })
     }
 }
