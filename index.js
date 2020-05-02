@@ -111,7 +111,7 @@ export class DocServerAPI {
         }
         let query = '?'+ Object.keys(params).map(key => key+'='+params[key]).join("&")
         let url = `${this.url}/docs/${this.getUsername()}/delete/${query}`
-        this._fetch(url, {
+        return this._fetch(url, {
             method:'POST'
         }).then(res => res.json())
             .then(res => {
